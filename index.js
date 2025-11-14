@@ -18,8 +18,7 @@ app.use(cors())
 app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/posts', postRouter)
 app.use('/api/v1/admin', adminRouter)
-app.use('/api/v1/')
-app.use('/api/v1/categories', )
+app.use('/api/v1/categories', postRouter)
 
 
 const PORT = process.env.PORT
