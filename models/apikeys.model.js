@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const apiKeySchema = new Schema({
-    user: {
+    createdby: {
         type: ObjectId,
         ref: 'User',
         required: true

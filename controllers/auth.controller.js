@@ -1,9 +1,11 @@
 const { email } = require("zod")
 const { UserModel } = require("../models/users.model")
+const {ApiKeyModel} = require('../models/apikeys.model')
 const { registerSchema, loginSchema } = require("../utils/validation")
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const dotenv = require('dotenv')
+const { generateAPI } = require("../utils/apikey")
 dotenv.config()
 
 
@@ -170,10 +172,38 @@ const getProfile = async (req, res ) => {
     }
 }
 
+const generateApiKey = async (req, res) => {
+    const userid = req.body
+
+    const rawkey = generateAPI()
+    const hashedKey = crypto.createHash("sha256").update(rawkey).digest("hex");
+
+    try {
+        await ApiKeyModel.create({
+            createdby : userid,
+            key : hashedKey,
+            active : true
+        })
+    
+        res.status(201).json({
+            message : "api key is created",
+            key : rawkey
+        })
+    } catch (error) {
+        res.status(500).json({
+            message : "internal server error",
+            error : error.message
+        })
+    }
+
+
+}
 
 module.exports = {
     registerUser : registerUser,
     registerAdmin : registerAdmin,
-    login : login
+    login : login,
+    getProfile : getProfile,
+    generateApiKey : generateApiKey
 
 }
